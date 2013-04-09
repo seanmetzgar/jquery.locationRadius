@@ -1,0 +1,67 @@
+body,html {
+    margin:0;padding:0;
+    font-family:Helvetica,Arial,sans-serif;
+    font-size:12px;
+    line-height:16px;
+    color:#333;
+}
+.wrapper {
+    width:600px;
+    margin:0 auto;
+    padding:10px 0;
+}
+
+#mappie {
+    height:400px;
+    margin:0 auto;
+    border:1px solid #777;
+    background-color:#ddd;
+}
+
+
+/** POLYMAPS **/
+#mappie .compass .back {
+  fill: #eee;
+  fill-opacity: .8;
+}
+
+#mappie .compass .fore {
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+#mappie .compass rect.back.fore {
+  fill: #999;
+  fill-opacity: .3;
+  stroke: #eee;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+#mappie .compass .direction {
+  fill: none;
+}
+
+#mappie .compass .chevron {
+  fill: none;
+  stroke: #999;
+  stroke-width: 5px;
+}
+
+#mappie .compass .zoom .chevron {
+  stroke-width: 4px;
+}
+
+#mappie .compass .active .chevron, .compass .chevron.active {
+  stroke: #fff;
+}
+
+#mappie .compass.active .active .direction {
+  fill: #999;
+}
+
+#mappie .layer path {
+    fill: lightsteelblue;
+    fill-opacity: .5;
+    stroke: steelblue;
+}
