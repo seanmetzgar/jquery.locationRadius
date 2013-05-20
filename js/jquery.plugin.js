@@ -30,14 +30,6 @@
             map.add(mapGeoJson=polymaps.geoJson()
                 .features([
                     {
-                        "type":"GeometryCollection",
-                        "geometries": [
-                        ]
-                        
-                    }
-                    
-                    
-                    {
                       "geometry": {
                         "coordinates": [convertPolySet(getPoints(normalizeLatLong(map.pointLocation(map.mouse(a))), 100, 360))],
                         "type": "Polygon"
