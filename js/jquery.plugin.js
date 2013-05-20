@@ -13,15 +13,14 @@
         //private functions
         function normalizeLatLong(point) {
             if (point.lon < 0) {
-                while (Math.abs(point.lon) > 360) { point.lon+=360; }
+                while (Math.abs(point.lon) > 180) { point.lon+=360; }
             } else {
-                while (point.lon > 360) { point.lon-=360; }
+                while (point.lon > 180) { point.lon-=360; }
             }
-
             if (point.lat < 0) {
-                while (Math.abs(point.lat) > 360) { point.lat+=360; }
+                while (Math.abs(point.lat) > 90) { point.lat+=90; }
             } else {
-                while (point.lat > 360) { point.lat-=360; }
+                while (point.lat > 90) { point.lat-=90; }
             }
             return point;
         }
@@ -31,10 +30,33 @@
             map.add(mapGeoJson=polymaps.geoJson()
                 .features([
                     {
+                        "type":"GeometryCollection",
+                        "geometries": [
+                        ]
+                        
+                    }
+                    
+                    
+                    {
                       "geometry": {
                         "coordinates": [convertPolySet(getPoints(normalizeLatLong(map.pointLocation(map.mouse(a))), 100, 360))],
                         "type": "Polygon"
                       },
+                      "properties": {"class":"thingy"}
+                    },
+                    {
+                      "geometry": {
+                        "coordinates": [convertPolySet(getPoints(normalizeLatLong(map.pointLocation(map.mouse(a))), 100, 360), 360)],
+                        "type": "Polygon"
+                      },
+                      "properties": {"class":"thingy"}
+                    },
+                    {
+                      "geometry": {
+                        "coordinates": [convertPolySet(getPoints(normalizeLatLong(map.pointLocation(map.mouse(a))), 100, 360), -360)],
+                        "type": "Polygon"
+                      },
+                      "properties": {"class":"thingy"}
                     }
                 ]));
         }
@@ -141,7 +163,7 @@
                     - Math.sin(lat1Rad)
                     * Math.sin(lat2Rad));
         
-            lon2Rad = (lon2Rad + 3 * Math.PI) % (2 * Math.PI) - Math.PI; /*normalise to -180..+180 degrees*/
+            //lon2Rad = (lon2Rad + 3 * Math.PI) % (2 * Math.PI) - Math.PI; /*normalise to -180..+180 degrees*/
             lon2Deg = lon2Rad * r2d;
             lat2Deg = lat2Rad * r2d;
         
@@ -167,18 +189,18 @@
             }
             radiusPoints.push(radiusPoints[0]);
             
-            console.log(radiusPoints);
             return radiusPoints;
         }
         
-        function convertPolySet(points) {
+        function convertPolySet(points, adder) {
             "use strict";
             var newPoints = [], x;
-        
+            adder = (typeof adder === "undefined") ? 0 : adder;
+            
             for (x in points) {
-                newPoints.push([points[x].lon,points[x].lat]);
+                newPoints.push([(points[x].lon)+adder,points[x].lat]);
             }
-        
+            
             return newPoints;
         }
          
@@ -196,8 +218,9 @@
                         .container(this.appendChild(polymaps.svg("svg")))
                         .add(polymaps.interact())
                         .add(polymaps.hash())
-                        .zoomRange([3,18])
-                        .zoom(3),
+                        .zoomRange([2,18])
+                        .zoom(2);
+                    console.log(map.extent());
                     $.ajax({
                         dataType:"jsonp",
                         url: jsonUrl,
@@ -213,38 +236,3 @@
         
     };
 }(jQuery));
-
-
-
-function buildPoints(){
-    var radius=50;
-    var latitude=90;
-    var longitude=0;
-    var pi = Math.PI;
-    var d2r = pi/180;
-    var r2d = 180/pi;
-    var rEarth = 3693;
-    var cLat = (radius / rEarth) * r2d;
-    var cLng = cLat / Math.cos(latitude * d2r);
-    console.log("cLat",cLat);
-    console.log("cLng",cLng);
-
-    var points = [];
-    console.log("declaring points array", points);
-
-    for (var i=0; i < 360; i++) {
-        var theta = Math.PI * (i/16);
-        var point = [
-            longitude + (cLng * Math.cos(theta)),
-            latitude + (cLat * Math.sin(theta))
-            
-        ];
-        console.log("New Point",point);
-        points.push(point);
-
-    }
-    console.log("All Points",points);
-    points.push(points[0]);
-
-    return points;
-}
